@@ -1,8 +1,8 @@
-# 利用 SD WebUI 在电商场景下通过生成AI模特搭配服装的方案探索
+# Stable Diffusion WebUI 在电商场景生成AI模特搭配服装的方案探索
 
 ## 概述
 
-Stable diffusion 作为一个开源项目，目前被广泛应用在各个行业和领域做应用探索，本文介绍的方案应用场景是针对电商行业，一些电商公司在日常运营工作中，需要处理大量的模特搭配服装的产品图片，这些图片需要电商公司找模特去专业的摄影棚去拍摄，是比较耗费成本且时间周期也比较长。本方案使用 Stable Diffusion WebUI 及相关的扩展组件探索一种可以快速生成AI模特适配服装产品的方案，供大家参考。
+Stable diffusion 作为一个开源项目，目前被广泛应用在各个行业和领域做应用探索，本文介绍的方案应用场景是针对电商行业，一些电商公司在日常运营工作中，需要处理大量的模特搭配服装的产品图片，这些图片需要电商公司耗费成本去准备且时间周期也比较长。本方案使用 Stable Diffusion WebUI 及相关的扩展组件应用在 [Amazon EC2](https://aws.amazon.com/cn/ec2/) (本文使用G4dn实例) 探索一种可以快速生成AI模特适配服装产品的方案，供大家参考。当然也可以部署在 [Amazon SageMaker](https://aws.amazon.com/cn/sagemaker/)（通过完全托管的基础设施、工具和工作流程为任何用例构建、训练和部署机器学习 (ML) 模型。）当然不仅如此，利用 [Amazon SageMaker All in one WebUI solution](https://docs.ai.examples.pro/stable-diffusion-webui/) 还能实现利用 WebUI 完成多租户管理，并且实现更弹性、按需使用的并行推理和微调。并且可以进行模型异步推理，不光可以满足企业多用户内部使用，并且可以解决企业客户通过 Stable Diffution 服务海量用户的需求。
 
 以下演示流程使用 WebUI Img2Img 支持服装图片和蒙版、LoRA 提供人物风格模型、ControlNet 控制人体姿态的组合使用。
 
@@ -14,7 +14,7 @@ Stable diffusion 作为一个开源项目，目前被广泛应用在各个行业
 
 ## 1、实验环境准备
 
-在亚马逊云科技上可以很方便的使用 GPU 实例构建单机版本的 WebUI 环境做日常的测试使用，推荐使用 G4dn 机型（NVIDIA T4 GPU，16 GiB 显存）或者 G5 机型（NVIDIA A10G GPU，24 GiB 显存），因为在推理和 Fine-Tuning 过程是独占 GPU，所以单机版不太合适多人同时使用，如果是团队使用，亚马逊云科技也提供了基于 SageMaker 构建的多租户解决方案，在本末做详细的关联介绍。
+在亚马逊云科技上可以很方便的使用 GPU 实例构建单机版本的 WebUI 环境做日常的测试使用，推荐使用 G4dn 机型（NVIDIA T4 GPU，16 GiB 显存）或者 G5 机型（NVIDIA A10G GPU，24 GiB 显存）。
 
 ### a、搭建 Stable Diffusion WebUI，由于相关版本和扩展更新比较快，直接去 Github 下载最新版本可以获得更多的功能支持能力。
 
@@ -38,6 +38,9 @@ wget -O chilloutmix_NiPrunedFp32.safetensors https://civitai.com/api/download/mo
 ### d、ControlNet 和 3D Open Pose Edit 扩展安装，可以直接通过 WebUI 的官方扩展搜索。
 
 ![origin_cloth](./assets/018.png)
+
+以上为单 GPU 实例部署方式，若需 Amazon Sagemaker 部署方式请参考Blog:
+[生花妙笔信手来 – 基于 SageMaker Notebook 快速搭建托管的 Stable Diffusion – AI 作画可视化环境](https://aws.amazon.com/cn/blogs/china/quickly-build-a-hosted-stable-diffusion-ai-drawing-visualization-environment-based-on-sagemaker-notebook/)
 
 ## 2、图片处理
 
@@ -122,19 +125,3 @@ lowres, (bad anatomy), bad hands, mutated hand, text, error, missing fingeewer d
 ## 8、总结
 
 利用 Stable Diffusion WebUI + LoRA + ControlNet 做 AI 模特适配电商服装图片生成的方案，可以在一些电商运营场景下降低服装商品图片素材的生产成本和周期。在整个方案的流程中，图片处理还可以考虑去探索借助 Sagment Anything 去分隔服装和生成对应的蒙版。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
